@@ -38,7 +38,7 @@ To get started, clone the repository you need and follow the instructions in its
 
 1. Clone the desired repository:
    ```bash
-   git clone https://github.com/OpenSourceIntelligencePlatform/<repository-name>.git
+   git clone https://github.com/osint-services/<repository-name>.git
    cd <repository-name>
     ```
 2. Start the desired repository
