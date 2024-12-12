@@ -13,8 +13,8 @@ The **Open Source Intelligence Platform** aims to:
 
 | Repository Name           | Description                                                                                  |
 |---------------------------|----------------------------------------------------------------------------------------------|
-| **WhatsMyName**     | A Python microservice to find website profiles based on a given username     |
-| **ThatsThem**  | A Python microservice to retrieve relevant information for a given name, address, email or phone number.                  |
+| **scan**     | A Python microservice to find website profiles based on a given username.     |
+| **focus**  | A Python microservice to get metadata for a particular website profile based on the URL found from scanning.        |
 
 
 ## 🛠️ Features
