@@ -38,11 +38,12 @@ To get started, clone the repository you need and follow the instructions in its
 
 1. Clone the desired repository:
    ```bash
-   git clone https://github.com/osint-services/<repository-name>.git
-   cd <repository-name>
+   git clone https://github.com/osint-services/platform.git
+   cd platform
     ```
-2. Start the desired repository
+2. Start the platform
    ```bash
-   fastapi dev main.py
+   docker build -t platform .
+   docker run -p 80:80 platform
    ```
-3. The repository should be running and available, you can check the terminal output to see where it's pointing.
+3. All microservices will be available on port 80 using the given endpoints listed. 
