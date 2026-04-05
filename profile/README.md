@@ -14,7 +14,7 @@ The **Open Source Intelligence Platform** aims to:
 | Repository Name           | Description                                                                                  |
 |---------------------------|----------------------------------------------------------------------------------------------|
 | **profile-checker**     | A Python microservice to find website profiles based on a given username.     |
-| **focus**  | A Python microservice to get metadata for a particular website profile based on the URL found from scanning.        |
+| **profile-search**  | A Python microservice to get metadata for a particular website profile based on the URL found from scanning.        |
 
 
 ## 🛠️ Features
