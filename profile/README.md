@@ -15,6 +15,8 @@ The **Open Source Intelligence Platform** aims to:
 |---------------------------|----------------------------------------------------------------------------------------------|
 | **profile_checker**     | A Python microservice to find website profiles based on a given username.     |
 | **profile_search**  | A Python microservice to get metadata for a particular website profile based on the URL found from scanning.        |
+| **phone_search**  | A small FastAPI microservice that resolves caller name information for a phone number using Twilio Lookup v2.        |
+
 
 
 ## 🛠️ Features
