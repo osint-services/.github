@@ -36,7 +36,7 @@ The services remain independently runnable, while the platform repository provid
 2. **Choose sources** across all connected services, live APIs only, or imported datasets only. Excluded providers are not called.
 3. **Inspect a profile** to retrieve public X identity fields, media, verification state, dates, pinned/recent post IDs, entities, and metrics. Public scan evidence remains available when paid X inspection is unavailable.
 4. **Review phone results** from Twilio Lookup v2 and exact normalized matches in imported phone datasets.
-5. **Import authorized data** from CSV, JSON, JSONL, or NDJSON by previewing rows and mapping source columns to a documented canonical schema.
+5. **Import authorized data** from CSV, JSON, JSONL, or NDJSON through one sparse entity pipeline. Each row can contain a profile identifier, a phone identifier, or both; matching either identifier returns the stored association.
 6. **Manage integrations** by reviewing the configured and reachable state of X/Tweepy, Twilio Lookup, and local datasets, or replacing provider credentials from the desktop UI.
 
 Live providers and imported sources are queried independently. A provider error is shown with that source while successful results from other sources remain available.
@@ -61,8 +61,8 @@ All routes are exposed through nginx at `http://127.0.0.1:80`.
 | `GET /focus?url={profile_url}` | `profile_search` | Inspect an X profile and return public metadata. |
 | `GET /phone_search?phone_number={e164_number}` | `phone_search` | Look up phone and caller metadata. |
 | `GET /datasets` | `dataset_service` | List imported datasets. |
-| `GET /datasets/schema/{profile\|phone}` | `dataset_service` | Describe canonical import fields. |
-| `POST /datasets/import` | `dataset_service` | Import mapped profile or phone rows. |
+| `GET /datasets/schema/entity` | `dataset_service` | Describe the unified sparse entity fields. |
+| `POST /datasets/import` | `dataset_service` | Import mapped entities with profile identifiers, phone identifiers, or both. |
 | `GET /datasets/search/profiles?query=...&fuzzy=true` | `dataset_service` | Search imported profile records. |
 | `GET /datasets/search/phones?phone_number=...` | `dataset_service` | Search imported phone records by normalized E.164 number. |
 | `DELETE /datasets/{dataset_id}` | `dataset_service` | Delete a dataset and its records. |
@@ -136,7 +136,7 @@ npm install
 npm start
 ```
 
-The UI checks platform availability, can attempt to start the parent Compose stack, and provides Search, Datasets, Integrations, and History workspaces. Search includes Auto, Profile, and Phone modes plus source filters that control which providers are queried. Imported records retain their dataset, source, observation time, optional confidence, normalized fields, and original row for audit.
+The UI checks platform availability, can attempt to start the parent Compose stack, and provides Search, Datasets, Integrations, and History workspaces. Search includes Auto, Profile, and Phone modes plus source filters that control which providers are queried. Datasets use one mapping workflow, require only one searchable identifier per row, and retain typed profile and phone metadata under a shared entity. Imported records preserve their dataset, source, observation time, optional confidence, normalized fields, associations, and original row for audit.
 
 ## Operations
 
