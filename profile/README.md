@@ -28,15 +28,16 @@ The services remain independently runnable, while the platform repository provid
 - health and readiness endpoints
 - persistent normalized profile and phone datasets
 - helper scripts for starting, stopping, rebuilding, and viewing logs
-- a unified Electron interface with source-aware results and local history
+- a unified Electron search interface with identifier and source filters, type-specific results, and local history
 
 ## Workflow
 
-1. **Search a username** across live public checks and imported profile datasets. Result cards preserve public validation evidence, source links, and imported-record provenance even when paid X profile inspection is unavailable.
-2. **Inspect a profile** to retrieve public X identity fields, media, verification state, dates, pinned/recent post IDs, entities, and metrics.
-3. **Search a phone number** across Twilio Lookup v2 and exact normalized matches in imported phone datasets.
-4. **Import authorized data** from CSV, JSON, JSONL, or NDJSON by previewing rows and mapping source columns to a documented canonical schema.
-5. **Manage integrations** by reviewing the configured and reachable state of X/Tweepy, Twilio Lookup, and local datasets, or replacing provider credentials from the desktop UI.
+1. **Enter a username or phone number** in the shared Search workspace. Auto mode routes clearly formatted phone numbers to phone services and other values to profile services; explicit modes handle ambiguous identifiers.
+2. **Choose sources** across all connected services, live APIs only, or imported datasets only. Excluded providers are not called.
+3. **Inspect a profile** to retrieve public X identity fields, media, verification state, dates, pinned/recent post IDs, entities, and metrics. Public scan evidence remains available when paid X inspection is unavailable.
+4. **Review phone results** from Twilio Lookup v2 and exact normalized matches in imported phone datasets.
+5. **Import authorized data** from CSV, JSON, JSONL, or NDJSON by previewing rows and mapping source columns to a documented canonical schema.
+6. **Manage integrations** by reviewing the configured and reachable state of X/Tweepy, Twilio Lookup, and local datasets, or replacing provider credentials from the desktop UI.
 
 Live providers and imported sources are queried independently. A provider error is shown with that source while successful results from other sources remain available.
 
@@ -135,7 +136,7 @@ npm install
 npm start
 ```
 
-The UI checks platform availability, can attempt to start the parent Compose stack, and provides Username, Phone, Datasets, Integrations, and History workspaces. Imported records retain their dataset, source, observation time, optional confidence, normalized fields, and original row for audit.
+The UI checks platform availability, can attempt to start the parent Compose stack, and provides Search, Datasets, Integrations, and History workspaces. Search includes Auto, Profile, and Phone modes plus source filters that control which providers are queried. Imported records retain their dataset, source, observation time, optional confidence, normalized fields, and original row for audit.
 
 ## Operations
 
