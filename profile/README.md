@@ -36,6 +36,7 @@ The services remain independently runnable, while the platform repository provid
 2. **Inspect a profile** to retrieve public X identity fields, media, verification state, dates, pinned/recent post IDs, entities, and metrics.
 3. **Search a phone number** across Twilio Lookup v2 and exact normalized matches in imported phone datasets.
 4. **Import authorized data** from CSV, JSON, JSONL, or NDJSON by previewing rows and mapping source columns to a documented canonical schema.
+5. **Manage integrations** by reviewing the configured and reachable state of X/Tweepy, Twilio Lookup, and local datasets, or replacing provider credentials from the desktop UI.
 
 Live providers and imported sources are queried independently. A provider error is shown with that source while successful results from other sources remain available.
 
@@ -86,7 +87,7 @@ Set these values in `.env`:
 | `TWILIO_AUTH_TOKEN` | `phone_search` | Secret used to authenticate Twilio API requests. |
 | `DATASET_DB_PATH` | `dataset_service` | SQLite path; Compose sets `/data/datasets.db` in a persistent named volume. |
 
-Never place real credentials in `.env.example`, source files, logs, issues, or commits. The local `.env` file is intentionally ignored by Git.
+Never place real credentials in `.env.example`, source files, logs, issues, or commits. The local `.env` file is intentionally ignored by Git. The desktop Integrations workspace never displays existing values; replacements are handled by the Electron main process, written atomically with owner-only permissions, and applied by recreating only the affected API services when Docker is accessible.
 
 ## Getting started
 
@@ -134,7 +135,7 @@ npm install
 npm start
 ```
 
-The UI checks platform availability, can attempt to start the parent Compose stack, and provides Username, Phone, Datasets, and History workspaces. Imported records retain their dataset, source, observation time, optional confidence, normalized fields, and original row for audit.
+The UI checks platform availability, can attempt to start the parent Compose stack, and provides Username, Phone, Datasets, Integrations, and History workspaces. Imported records retain their dataset, source, observation time, optional confidence, normalized fields, and original row for audit.
 
 ## Operations
 
