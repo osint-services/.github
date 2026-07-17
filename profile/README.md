@@ -1,6 +1,6 @@
 # Open Source Intelligence Platform
 
-The Open Source Intelligence Platform is a modular collection of services for discovering public profiles, inspecting public X profile metadata, and resolving caller information. The [`platform`](https://github.com/osint-services/platform) repository brings the services together behind one nginx endpoint and includes the [`whoisit`](https://github.com/osint-services/whoisit) Electron UI.
+The Open Source Intelligence Platform is a modular investigation workspace for discovering public profiles, inspecting public X metadata, resolving caller information, and searching authorized local datasets. The [`platform`](https://github.com/osint-services/platform) repository brings live and imported sources together behind one nginx endpoint and the [`whoisit`](https://github.com/osint-services/whoisit) Electron UI.
 
 ## Architecture
 
@@ -12,6 +12,8 @@ flowchart LR
         Proxy -->|/scan/*| Checker["profile_checker<br/>FastAPI"]
         Proxy -->|/focus*| Search["profile_search<br/>FastAPI + X API"]
         Proxy -->|/phone_search*| Phone["phone_search<br/>FastAPI + Twilio Lookup v2"]
+        Proxy -->|/datasets*| Data["dataset_service<br/>FastAPI + SQLite"]
+        Data --> Volume[("dataset_data<br/>persistent volume")]
     end
 
     Search --> X["X API"]
@@ -24,21 +26,25 @@ The services remain independently runnable, while the platform repository provid
 - nginx routing through port `80`
 - environment-variable injection for external APIs
 - health and readiness endpoints
+- persistent normalized profile and phone datasets
 - helper scripts for starting, stopping, rebuilding, and viewing logs
-- an Electron desktop interface for the complete workflow
+- a unified Electron interface with source-aware results and local history
 
 ## Workflow
 
-1. **Scan a username** to discover matching public profile URLs.
-2. **Inspect a profile** to retrieve public X account metadata, including identity fields, profile media, verification state, account dates, pinned/recent post IDs, entities, and public metrics.
-3. **Look up a phone number** in E.164 format through Twilio Lookup v2 to retrieve validation, formatting, country, and caller-name information when available.
+1. **Search a username** across live public checks and imported profile datasets.
+2. **Inspect a profile** to retrieve public X identity fields, media, verification state, dates, pinned/recent post IDs, entities, and metrics.
+3. **Search a phone number** across Twilio Lookup v2 and exact normalized matches in imported phone datasets.
+4. **Import authorized data** from CSV, JSON, JSONL, or NDJSON by previewing rows and mapping source columns to a documented canonical schema.
+
+Live providers and imported sources are queried independently. A provider error is shown with that source while successful results from other sources remain available.
 
 ## Repositories
 
 | Repository | Role |
 | --- | --- |
 | [`platform`](https://github.com/osint-services/platform) | Top-level Docker Compose orchestration, nginx proxy, shared configuration, and service submodules. |
-| [`whoisit`](https://github.com/osint-services/whoisit) | Electron and React desktop UI for username scans, profile inspection, phone lookup, and platform status. |
+| [`whoisit`](https://github.com/osint-services/whoisit) | Electron and React workspace for combined username and phone search, profile inspection, dataset imports, provenance, and local history. |
 | [`profile_checker`](https://github.com/osint-services/profile_checker) | FastAPI service that validates configured public profile locations for a username. |
 | [`profile_search`](https://github.com/osint-services/profile_search) | FastAPI and Tweepy service that retrieves public X profile metadata from a discovered profile URL. |
 | [`phone_search`](https://github.com/osint-services/phone_search) | FastAPI service that resolves caller metadata through Twilio Lookup v2. |
@@ -52,9 +58,16 @@ All routes are exposed through nginx at `http://127.0.0.1:80`.
 | `GET /scan/{username}` | `profile_checker` | Scan configured platforms for a username. |
 | `GET /focus?url={profile_url}` | `profile_search` | Inspect an X profile and return public metadata. |
 | `GET /phone_search?phone_number={e164_number}` | `phone_search` | Look up phone and caller metadata. |
+| `GET /datasets` | `dataset_service` | List imported datasets. |
+| `GET /datasets/schema/{profile\|phone}` | `dataset_service` | Describe canonical import fields. |
+| `POST /datasets/import` | `dataset_service` | Import mapped profile or phone rows. |
+| `GET /datasets/search/profiles?query=...&fuzzy=true` | `dataset_service` | Search imported profile records. |
+| `GET /datasets/search/phones?phone_number=...` | `dataset_service` | Search imported phone records by normalized E.164 number. |
+| `DELETE /datasets/{dataset_id}` | `dataset_service` | Delete a dataset and its records. |
 | `GET /scan/healthz` | `profile_checker` | Username-scan service liveness. |
 | `GET /focus/readyz` | `profile_search` | Profile service readiness, including X credential configuration. |
 | `GET /phone_search/healthz` | `phone_search` | Phone service liveness. |
+| `GET /datasets/healthz` | `dataset_service` | Dataset service liveness. |
 
 ## Configuration
 
@@ -71,6 +84,7 @@ Set these values in `.env`:
 | `TWEEPY_BEARER_TOKEN` | `profile_search` | X API app-only Bearer Token used for read-only public profile lookup. |
 | `TWILIO_ACCOUNT_SID` | `phone_search` | Identifier for the Twilio account making Lookup API requests. |
 | `TWILIO_AUTH_TOKEN` | `phone_search` | Secret used to authenticate Twilio API requests. |
+| `DATASET_DB_PATH` | `dataset_service` | SQLite path; Compose sets `/data/datasets.db` in a persistent named volume. |
 
 Never place real credentials in `.env.example`, source files, logs, issues, or commits. The local `.env` file is intentionally ignored by Git.
 
@@ -107,6 +121,7 @@ Verify the routed services:
 curl http://127.0.0.1/scan/healthz
 curl http://127.0.0.1/focus/readyz
 curl http://127.0.0.1/phone_search/healthz
+curl http://127.0.0.1/datasets/healthz
 ```
 
 ### Start the desktop UI
@@ -119,7 +134,7 @@ npm install
 npm start
 ```
 
-The UI checks platform availability, can attempt to start the parent Compose stack, and presents the scan, profile, and phone results in one interface.
+The UI checks platform availability, can attempt to start the parent Compose stack, and provides Username, Phone, Datasets, and History workspaces. Imported records retain their dataset, source, observation time, optional confidence, normalized fields, and original row for audit.
 
 ## Operations
 
@@ -134,4 +149,4 @@ From the `platform` repository:
 
 ## Responsible use
 
-Use the platform only for lawful access to public or properly authorized data. Protect API credentials, respect provider terms and rate limits, and consider the privacy and safety impact of collecting or sharing identifying information.
+Use the platform only for lawful access to public or properly authorized data. Import only data you are permitted to retain and search. Protect API credentials and dataset volumes, respect provider and dataset license terms, apply appropriate retention controls, and consider the privacy and safety impact of collecting or sharing identifying information. The local API currently has no authentication layer and should not be exposed to an untrusted network without access controls.
