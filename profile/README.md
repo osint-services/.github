@@ -32,7 +32,7 @@ The services remain independently runnable, while the platform repository provid
 
 ## Workflow
 
-1. **Search a username** across live public checks and imported profile datasets.
+1. **Search a username** across live public checks and imported profile datasets. Result cards preserve public validation evidence, source links, and imported-record provenance even when paid X profile inspection is unavailable.
 2. **Inspect a profile** to retrieve public X identity fields, media, verification state, dates, pinned/recent post IDs, entities, and metrics.
 3. **Search a phone number** across Twilio Lookup v2 and exact normalized matches in imported phone datasets.
 4. **Import authorized data** from CSV, JSON, JSONL, or NDJSON by previewing rows and mapping source columns to a documented canonical schema.
