@@ -115,9 +115,8 @@ Never place real credentials in `.env.example`, source files, logs, issues, or c
 ### Prerequisites
 
 - Git, including configured access to the service submodules
-- Docker Engine
-- Docker Compose through the `docker compose` command
-- Node.js 22 or newer and npm to run the Electron UI
+- Docker Engine 28 or newer with Compose v2 or v5
+- Node.js 22.17 or newer and npm to run the Electron UI
 - Optional X API and Twilio credentials for their corresponding live features
 
 ### Start the platform
@@ -141,11 +140,13 @@ Verify the routed services:
 
 ```bash
 curl http://127.0.0.1/scan/healthz
-curl http://127.0.0.1/focus/readyz
+curl http://127.0.0.1/focus/healthz
 curl http://127.0.0.1/phone_search/healthz
 curl http://127.0.0.1/datasets/healthz
 curl http://127.0.0.1/map/readyz
 ```
+
+Use `/focus/readyz` to check whether an X token is configured. It returns HTTP 503 when the optional token is absent.
 
 ### Start the desktop UI
 
