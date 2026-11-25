@@ -2,6 +2,21 @@
 
 The Open Source Intelligence Platform is a modular investigation workspace for discovering public profiles, inspecting public X metadata, resolving caller information, searching authorized local datasets, and mapping explicit geospatial evidence. The [`platform`](https://github.com/osint-services/platform) repository brings live and imported sources together behind one nginx endpoint and the [`whoisit`](https://github.com/osint-services/whoisit) Electron UI.
 
+## Install the current release
+
+1. Install Git, Docker, and Docker Compose v2. Clone the platform at v1.1.0 with its pinned submodules, then start the backend:
+
+   ```bash
+   git clone --branch v1.1.0 --recurse-submodules https://github.com/osint-services/platform.git
+   cd platform
+   cp .env.example .env
+   docker compose up --build -d
+   ```
+
+2. On Debian or Ubuntu x86-64, [download Whoisit v1.0.0](https://github.com/osint-services/whoisit/releases/download/v1.0.0/whoisit_1.0.0_amd64.deb), install it with `sudo apt install ./whoisit_1.0.0_amd64.deb`, and launch Whoisit. The desktop package connects to the running backend at `http://127.0.0.1:80`. Manage the Compose stack and its settings from the platform checkout.
+
+3. To use **Certificates**, set `CERTIFICATE_INVENTORY_DOMAINS` in the platform `.env` for domains whose ownership you have verified. Recreate the dataset service with `docker compose up -d dataset_service`. See the [certificate inventory setup guide](https://github.com/osint-services/platform/blob/v1.1.0/docs/certificate-inventory.md#using-the-inventory).
+
 ## Architecture
 
 ```mermaid
@@ -106,7 +121,7 @@ Set these values in `.env`:
 
 Never place real credentials in `.env.example`, source files, logs, issues, or commits. The local `.env` file is intentionally ignored by Git. The desktop Integrations workspace never displays existing values; replacements are handled by the Electron main process, written atomically with owner-only permissions, and applied by recreating only the affected API services when Docker is accessible.
 
-## Getting started
+## Development setup
 
 ### Prerequisites
 
@@ -153,7 +168,7 @@ npm install
 npm start
 ```
 
-The UI checks platform availability, can attempt to start the parent Compose stack, and provides Search, Map, Datasets, Integrations, and History workspaces. The native Map workspace calls the shared `/map/search` API rather than embedding the standalone client. Credential-free dataset mapping remains available when X is not configured. Imported records preserve their dataset, source, observation time, optional confidence, normalized fields, associations, coordinates when explicitly supplied, and original row for audit.
+The UI checks platform availability, can attempt to start the parent Compose stack, and provides Search, Map, Datasets, Integrations, History, and Certificates workspaces. The native Map workspace calls the shared `/map/search` API rather than embedding the standalone client. Credential-free dataset mapping remains available when X is not configured. Imported records preserve their dataset, source, observation time, optional confidence, normalized fields, associations, coordinates when explicitly supplied, and original row for audit.
 
 ## Operations
 
