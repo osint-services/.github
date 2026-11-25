@@ -49,7 +49,7 @@ The services remain independently runnable, while the platform repository provid
 4. **Review phone results** from Twilio Lookup v2 and exact normalized matches in imported phone datasets.
 5. **Import authorized data** from CSV, JSON, JSONL, or NDJSON through one sparse entity pipeline. Each row can contain a profile identifier, a phone identifier, or both; matching either identifier returns the stored association.
 6. **Explore the Map workspace** by entering a place, radius, optional keyword, and source selection. Results retain source, accuracy, confidence, timestamps, provenance, and associated identity metadata.
-7. **Manage integrations** by reviewing the configured and reachable state of X/Tweepy, Twilio Lookup, local datasets, and Social Mapping, or replacing provider credentials from the desktop UI.
+7. **Manage integrations** by reviewing the configured and reachable state of X API, Twilio Lookup, local datasets, and Social Mapping, or replacing provider credentials from the desktop UI.
 
 Live providers and imported sources are queried independently. A provider error is shown with that source while successful results from other sources remain available.
 
@@ -61,7 +61,7 @@ Live providers and imported sources are queried independently. A provider error 
 | [`whoisit`](https://github.com/osint-services/whoisit) | Electron and React workspace for identity search, native mapping, dataset imports, provenance, and local history. |
 | [`social_mapping`](https://github.com/osint-services/social_mapping) | FastAPI geospatial aggregator and standalone React/Leaflet client for imported datasets and provider-supplied X locations. |
 | [`profile_checker`](https://github.com/osint-services/profile_checker) | FastAPI service that validates configured public profile locations for a username. |
-| [`profile_search`](https://github.com/osint-services/profile_search) | FastAPI and Tweepy service that retrieves public X profile metadata from a discovered profile URL. |
+| [`profile_search`](https://github.com/osint-services/profile_search) | FastAPI service that retrieves public X profile metadata from a discovered profile URL. |
 | [`phone_search`](https://github.com/osint-services/phone_search) | FastAPI service that resolves caller metadata through Twilio Lookup v2. |
 
 ## API routes
